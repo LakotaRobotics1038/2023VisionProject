@@ -8,14 +8,14 @@ def purpleBox(img):
         
         blueImg, greenImg, redImg = cv2.split(img)
         
-        blueMin = 150
+        blueMin = 100
         blueMax = 220
 
         redMin = 50
         redMax = 130
 
         greenMin = 70
-        greenMax = 130
+        greenMax = 140
         
         # 160 = Red, 32 = Green, 240 = Blue
         
@@ -28,8 +28,31 @@ def purpleBox(img):
         
         
 
+        edged = cv2.Canny(threshImg, 30, 200)
+        contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+        for c in contours:
+                rect = cv2.minAreaRect(c)
+                box = cv2.boxPoints(rect)
+                box = np.int0(box)
+                
+                bottomLeft = box[0]
+                bottomRight = box[1]
+                topRight = box[2]
+                topLeft = box[3]
+
+                distH = np.linalg.norm(bottomLeft - bottomRight)
+                distV = np.linalg.norm(topRight - bottomRight)
+
+                if distH >= 300:
+                         cv2.drawContours(img, [box], 0, (0,255,0), 2)
+
+ 
+        return img, threshImg
+        
 
 
+"""
 
         edged = cv2.Canny(threshImg, 30, 200)
         contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -38,7 +61,6 @@ def purpleBox(img):
                 rect = cv2.minAreaRect(c)
                 box = cv2.boxPoints(rect)
                 box = np.int0(box)
-                cv2.drawContours(img, [box], 0, (0,255,0), 2)
                 
                 bottomLeft = box[0]
                 bottomRight = box[1]
@@ -52,13 +74,6 @@ def purpleBox(img):
                 if area <= 25000 and area >= 5000:
                         cv2.drawContours(img, [box], 0, (0,255,0), 2)
 
-        
- 
-        return img, threshImg
-
-        
-
-
-
+"""
 
 
