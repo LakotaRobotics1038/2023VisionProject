@@ -8,6 +8,7 @@ camera = Picamera2()
 camera.start()
 camera.brightness = 10
 cv2.contrast = 100
+
 sleep(0.1) 
 running = True
 while running:
@@ -15,9 +16,9 @@ while running:
     #dont change convert line, below
     img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
     #fImg, points = reflectiveTFilter(img)
-    img, threshImg = purpleBox(img)
+    #img, threshImg = purpleBox(img)
     cv2.imshow("img", img)
-    cv2.imshow('threshImg', threshImg)
+    #cv2.imshow('threshImg', fImg)
 
     if cv2.waitKey(1) == 113:
         print("stopping")
