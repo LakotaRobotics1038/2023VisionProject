@@ -1,11 +1,12 @@
 import numpy as np
 import argparse
 import cv2
+import time
 
-conf_threshold = 0.3
-nms_threshold = 0.2
+conf_threshold = 0.8
+nms_threshold = 0.8
 
-net = cv2.dnn.readNetFromDarknet('/home/team1038/repos/2023VisionProject/mk1/yoloCon-tiny-mk1.cfg', '/home/team1038/repos/2023VisionProject/mk1/backup/yoloCon-tiny-mk1_last.weights')
+net = cv2.dnn.readNetFromDarknet('/home/team1038/repos/2023VisionProject/mk1/yolov4-tiny.cfg', '/home/team1038/repos/2023VisionProject/mk1/backup/yolov4-tiny_best.weights')
 scale = 1.0 / 255.0
 classes = None
 
@@ -42,15 +43,21 @@ def process(image):
     Height = image.shape[0]
     blob = cv2.dnn.blobFromImage(image, scale, (416, 416), (0, 0, 0), True, crop = False)
     net.setInput(blob)
+    
+    #the problem
+    begTime = time.time()
     outs = net.forward(get_output(net))
+    end_Time = time.time()
 
+    totalTime = begTime - end_Time
+
+    print('the problem took ' + str(totalTime) + ' seconds!')
     class_ids = []
 
     confidences = []
 
     boxes = []
-
-
+    
     for out in outs:
         for detection in out:
 
@@ -69,12 +76,13 @@ def process(image):
                 class_ids.append(class_id)
                 confidences.append(float(confidence))
                 boxes.append([x, y, w, h])
-                
+
 
 
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
     
 
+    beg__time =time.time()
     for i in indices:
 
         box = boxes[i]
@@ -90,5 +98,8 @@ def process(image):
         
         draw_bounding_box(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
 
+    end__time = time.time()
+    print('this for loop at the very end!!!  was this long: ' + str(end__time-beg__time))
+          
     return image
 
