@@ -3,24 +3,35 @@ import cv2
 import numpy as np
 
 
-#cap = cv2.VidoeCapture(0)
-tag1 = cv2.imread("/home/team1038/repos/2023VisionProject/data/AprilTag1.jpeg")
+def reflectiveTFilter(img):
+        grayImg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        (thresh, grayImg) = cv2.threshold(grayImg, 212, 220,cv2.THRESH_BINARY)
+        edged = cv2.Canny(grayImg, 30, 200)
+        contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        #cv2.(img, contours, -1, (0,220,0), 3)
+        points = []
+        for c in contours:
+                rect = cv2.minAreaRect(c)
+                box = cv2.boxPoints(rect)
+                box = np.int0(box)
 
-tag2 = cv2.imread("/home/team1038/repos/2023VisionProject/data/AprilTag2.jpeg")
+                bottomLeft = box[0]
+                bottomRight = box[1]
+                topRight = box[2]
+                topLeft = box[3]
+                distH = np.linalg.norm(bottomLeft - bottomRight)
+                distV = np.linalg.norm(topRight - bottomRight)
 
-tag3 = cv2.imread("/home/team1038/repos/2023VisionProject/data/AprilTag3.jpeg")
+                area = distH * distV
+                
+                if area <= 25000 and area >= 5000:
+                        points.append(topLeft)
+                        cv2.drawContours(img, [box], 0, (0,255,0), 2)
 
-tag4 = cv2.imread("/home/team1038/repos/2023VisionProject/data/AprilTag4.jpeg")
-
-tags = [tag1, tag2, tag3, tag4]
-
-num = 0
-for T in tags:
-    T = cv2.resize(T , (300, 413))
-    num = num + 1
-    cv2.imshow(str(num ), T)
-cv2.waitKey()
-
+        
+ 
+        return grayImg, points
+        
 
 
 
