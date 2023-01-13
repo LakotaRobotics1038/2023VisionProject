@@ -6,23 +6,32 @@ import numpy as np
 
 def purpleBox(img):
         
-        blueImg = img[0]
-        redImg = img[2]
-        greenImg = img[1]
+        blueImg, greenImg, redImg = cv2.split(img)
         
+        blueMin = 150
+        blueMax = 220
+
+        redMin = 50
+        redMax = 130
+
+        greenMin = 70
+        greenMax = 130
         
         # 160 = Red, 32 = Green, 240 = Blue
         
-        (thresh, blueImg) = cv2.threshold(blueImg, 230, 250, cv2.THRESH_BINARY)
-        (thresh, redImg) = cv2.threshold(redImg, 150, 170, cv2.THRESH_BINARY)
-        (thresh, greenImg) = cv2.threshold(greenImg, 22, 42, cv2.THRESH_BINARY)
+        (thresh, blueImg) = cv2.threshold(blueImg, blueMin, blueMax, cv2.THRESH_BINARY)
+        (thresh, redImg) = cv2.threshold(redImg, redMin, redMax, cv2.THRESH_BINARY)
+        (thresh, greenImg) = cv2.threshold(greenImg, greenMin, greenMax, cv2.THRESH_BINARY)
+
+        #change this to be a bitwise AND of the above images using cv2.bitwise_and
+        threshImg = cv2.bitwise_and(blueImg, cv2.bitwise_and(redImg, greenImg)) 
         
-        return blueImg, redImg, greenImg
+        
 
 
 
-"""
-        edged = cv2.Canny(grayImg, 30, 200)
+
+        edged = cv2.Canny(threshImg, 30, 200)
         contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         #cv2.(img, contours, -1, (0,220,0), 3)
         for c in contours:
@@ -41,13 +50,12 @@ def purpleBox(img):
                 area = distH * distV
                 
                 if area <= 25000 and area >= 5000:
-                        points.append(topLeft)
                         cv2.drawContours(img, [box], 0, (0,255,0), 2)
 
         
  
-        return img, grayImg
-"""
+        return img, threshImg
+
         
 
 

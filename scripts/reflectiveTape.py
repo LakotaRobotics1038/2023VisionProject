@@ -8,7 +8,7 @@ def reflectiveTFilter(img):
         grayImg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         
         # Converting greyscale image to binary (black or white)
-        (thresh, grayImg) = cv2.threshold(grayImg, 212, 220,cv2.THRESH_BINARY)
+        (thresh, grayImg) = cv2.threshold(grayImg, 212, 220, cv2.THRESH_BINARY)
         
         edged = cv2.Canny(grayImg, 30, 200)
         contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
