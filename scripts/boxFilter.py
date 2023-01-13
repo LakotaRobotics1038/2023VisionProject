@@ -8,14 +8,14 @@ def purpleBox(img):
         
         blueImg, greenImg, redImg = cv2.split(img)
         
-        blueMin = 100
-        blueMax = 220
+        blueMin = 90
+        blueMax = 120
 
-        redMin = 50
-        redMax = 130
+        redMin = 110 
+        redMax = 250
 
-        greenMin = 70
-        greenMax = 140
+        greenMin = 30
+        greenMax = 220
         
         # 160 = Red, 32 = Green, 240 = Blue
         
