@@ -1,0 +1,10 @@
+labeledData\20230121_085741.jpg
+labeledData\20230121_142837.jpg
+labeledData\20230121_085742.jpg
+labeledData\20230121_142818.jpg
+labeledData\20230121_101334.jpg
+labeledData\20230121_142830.jpg
+labeledData\20230121_142829.jpg
+labeledData\20230121_142822.jpg
+labeledData\20230121_142827.jpg
+labeledData\20230121_142815.jpg

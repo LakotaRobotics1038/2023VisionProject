@@ -1,0 +1,5 @@
+classes = 3
+train = ./train.txt
+valid = ./validate.txt
+names = ./labels.txt
+backup = ./backup
