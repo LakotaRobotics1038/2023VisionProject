@@ -1,12 +1,12 @@
 import os
 import random
 
-pathToRepo = r'D:\FRCLakota\2023VisionProject'
-folderName = 'labeledData\\'
+pathToRepo = r'/home/xarga/repos/2023VisionProject'
+folderName = 'labeledData/'
 extension = ".jpg"
-trainingLoc = pathToRepo + r'\mk1\train.txt'
-validationLoc = pathToRepo + r'\mk1\validate.txt'
-imageLocations = pathToRepo + r'\mk1\labeledData'
+trainingLoc = pathToRepo + r'/mk1/train.txt'
+validationLoc = pathToRepo + r'/mk1/validate.txt'
+imageLocations = pathToRepo + r'/mk1/labeledData'
 edge = .95
 
 if(os.path.exists(trainingLoc)):

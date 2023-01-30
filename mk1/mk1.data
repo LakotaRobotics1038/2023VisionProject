@@ -1,5 +1,5 @@
 classes = 3
-train = D:\FRCLakota\2023VisionProject\mk1\train.txt
-valid = D:\FRCLakota\2023VisionProject\mk1\validate.txt
-names = D:\FRCLakota\2023VisionProject\mk1\labels.txt
-backup = D:\FRCLakota\2023VisionProject\mk1\backup
+train = /home/xarga/repos/2023VisionProject/mk1/train.txt
+valid = /home/xarga/repos/2023VisionProject/mk1/validate.txt
+names = /home/xarga/repos/2023VisionProject/mk1/labels.txt
+backup = /home/xarga/repos/2023VisionProject/mk1/backup
