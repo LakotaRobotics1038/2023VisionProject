@@ -51,7 +51,7 @@ def process(image):
 
     totalTime = begTime - end_Time
 
-    print('the problem took ' + str(totalTime) + ' seconds!')
+    #print('the problem took ' + str(totalTime) + ' seconds!')
     class_ids = []
 
     confidences = []
@@ -99,7 +99,7 @@ def process(image):
         draw_bounding_box(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
 
     end__time = time.time()
-    print('this for loop at the very end!!!  was this long: ' + str(end__time-beg__time))
+    #print('this for loop at the very end!!!  was this long: ' + str(end__time-beg__time))
           
     return image
 

@@ -17,6 +17,11 @@ camera.resolution = (1000, 600)
 
 sleep(0.1) 
 running = True
+
+runYolo = False 
+
+toHSV = False
+
 while running:
     beg2Time = time.time()
       
@@ -24,18 +29,36 @@ while running:
     img = camera.capture_array()
 
     img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
-    
-    img = process(img)
 
+    if toHSV:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    
+    if runYolo:
+        img = process(img)
     
     cv2.imshow('frame', img)
 
-    if cv2.waitKey(1) == 113:
-        print("stopping")
+    key = cv2.waitKey(1)
+
+    if key == ord('r'):
+        toHSV = True
+
+    if key == ord('y'):
+        
+        runYolo = True
+        
+
+    elif key == ord('n'):
+        
+        runYolo = False
+        toHSV = False
+
+    elif key == ord('q'):
+       
         running = False
 
     endTime2 = time.time()
-    print('the whole program took ' + str(endTime2 - beg2Time))
-    print(' ')
+    
 cv2.destroyAllWindows()
 camera.stop()
