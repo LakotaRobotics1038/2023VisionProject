@@ -6,12 +6,12 @@ import time
 conf_threshold = 0.8
 nms_threshold = 0.8
 
-net = cv2.dnn.readNetFromDarknet('/home/team1038/repos/2023VisionProject/mk1/yolov4-tiny.cfg', '/home/team1038/repos/2023VisionProject/mk1/backup/yolov4-tiny_best.weights')
+net = cv2.dnn.readNetFromDarknet('../mk1/yolov4-tiny.cfg', '../mk1/backup/yolov4-tiny_best.weights')
 scale = 1.0 / 255.0
 classes = None
 
 classes = None
-with open('/home/team1038/repos/2023VisionProject/mk1/labels.txt', 'r') as f:
+with open('../mk1/labels.txt', 'r') as f:
     classes = [line.strip() for line in f.readlines()]
 
 COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
