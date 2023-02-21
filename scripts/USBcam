@@ -1,14 +1,18 @@
-import numpy as np
 import cv2
+import numpy as np
 
-cam = cv2.VideoCapture(0)
-
+cam = cv2.VideoCapture(0) #check this
 while(True):
+	#capture frame by frame
 	ret, frame = cam.read()
-
+	
+	#operations on the frame come fro here
 	cv2.imshow('window', frame)
+	
+
+
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
 
-cam.release()
-cv2.destroyallWindows()
+camera.release()
+cv2.destroyAllWindows()
