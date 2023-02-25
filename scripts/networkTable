@@ -1,0 +1,10 @@
+from networkTables import NetworkTables
+from time import sleep 
+
+NetworkTables.initialize()
+sd = NetworkTables.getTable('SmartDashboard')
+
+while(True):
+  print(sd.putNumber("something", x) #dont know what varibles to put here yet
+  print("running")
+  sleep(1)
