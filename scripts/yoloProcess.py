@@ -98,7 +98,13 @@ def process(image):
                     class_ids.append(class_id)
                     confidences.append(float(confidence))
                     boxes.append([x, y, w, h])
-                    dataOut.append((str(class_id), str(center_x), str(center_y)))
+                    dataOut.append({
+                        'id': str(class_id),
+                        'x': str(center_x),
+                        'y': str(center_y),
+                        'conf': str(confidence)
+                        'area' : str(w * h)
+                    })
 
 
 
