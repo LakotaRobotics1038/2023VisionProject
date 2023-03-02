@@ -15,26 +15,32 @@ cam = cv2.VideoCapture(0)
 inst.startClient4('visionSystem')
 inst.setServerTeam(1038)'''
 
-NetworkTables.initialize(server='10.10.38.2')
+NetworkTables.initialize(server='172.16.185.112') #10.10.38.2 use later
 
 # get custom table
 '''table = inst.getTable('visionTable')'''
-sd = NetworkTables.getTable('Vision')
+tables = NetworkTables.getTable('Vision')
 
 
-# put values
-on = True
+
+
 #valuesOut = table.getStringTopic('values').publish()
-
-
+def run_network():
+    while True:
+        on = tables.getBoolean('on', True)
+        print('running')
+        if on:
+            ret, img = cam.read()
+            if ret:
+                img, vals = process(img)
+                print(vals)
+                tables.putString('values', json.dumps(vals))
 
 
 def get_image():
     while True:
         ret, img = cam.read()
-        if ret and on:
-            img, vals = process(img)
-            #valuesOut.set(json.dumps(vals))
+        
         _, frame = cv2.imencode('.jpg', img)
         yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
 
@@ -42,24 +48,15 @@ def get_image():
 def stream():
     return Response(get_image(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
+t = threading.Thread(target=run_network)
+t.start()
 app.run(host='0.0.0.0', port = 1180, threaded=True)
 
-#sleep(0.1)
 
-#running = True
 
-#runYolo = False
 
-#while running:
-  # on = table.getBoolean('on')
-  # table.put('values', ...)
- #   beg2Time = time.time()
 
-  #  if runYolo:
-   #     img = process(img)
 
-        
 
 
 

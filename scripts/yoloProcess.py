@@ -5,6 +5,7 @@ import time
 
 conf_threshold = 0.9
 nms_threshold = 0.8
+inf_thresh = 50
 
 net = cv2.dnn.readNetFromDarknet('../mk1/yolov4-tiny.cfg', '../mk1/backup/yolov4-tiny_best.weights')
 scale = 1.0 / 255.0
@@ -36,7 +37,17 @@ def draw_bounding_box (img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
     cv2.putText(img, label + f" {confidence}", (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-    
+def getBetterObj(ID, x, y, conf, ids, boxes, confs):
+    print('Getting Better object')
+    print(ID, x, y, conf, ids, boxes, confs)
+    index = ids.index(ID)
+    boxes[index][0]#this gets x
+    boxes[index][1]#this gets y
+     
+
+    #return true if you find abetter box or if the box is not near another box
+    # if better box remove the inferior box 
+
 def process(image):
     
     Width = image.shape[1]
@@ -70,10 +81,12 @@ def process(image):
                 h = int(detection[3] * Height)
                 x = center_x - w/2
                 y = center_y - h/2
-                class_ids.append(class_id)
-                confidences.append(float(confidence))
-                boxes.append([x, y, w, h])
-                dataOut.append((str(class_id), str(center_x), str(center_y)))
+                if len(boxes) == 0 or class_id not in class_ids or getBetterObj(class_id, x, y, confidence, class_ids, boxes, confidences):
+                    
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([x, y, w, h])
+                    dataOut.append((str(class_id), str(center_x), str(center_y)))
 
 
 
