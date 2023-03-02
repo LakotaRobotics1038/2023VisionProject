@@ -11,14 +11,10 @@ cam = cv2.VideoCapture(0)
 #default port for network tables = 1735
 
 # init network tables
-'''inst = ntcore.NetworkTableInstance.getDefault()
-inst.startClient4('visionSystem')
-inst.setServerTeam(1038)'''
 
 NetworkTables.initialize(server='172.16.185.112') #10.10.38.2 use later
 
 # get custom table
-'''table = inst.getTable('visionTable')'''
 tables = NetworkTables.getTable('Vision')
 
 

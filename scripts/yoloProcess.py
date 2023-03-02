@@ -6,8 +6,9 @@ import time
 conf_threshold = 0.9
 nms_threshold = 0.8
 inf_thresh = 50
+pixToll = 25 
 
-net = cv2.dnn.readNetFromDarknet('../mk1/yolov4-tiny.cfg', '../mk1/backup/yolov4-tiny_best.weights')
+net = cv2.dnn.readNetFromDarknet('../mk1/yoloCon-tiny-mk1.cfg', '../mk1/backup/yoloCon-tiny-mk1_last.weights')
 scale = 1.0 / 255.0
 classes = None
 
@@ -37,13 +38,24 @@ def draw_bounding_box (img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
     cv2.putText(img, label + f" {confidence}", (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-def getBetterObj(ID, x, y, conf, ids, boxes, confs):
-    print('Getting Better object')
-    print(ID, x, y, conf, ids, boxes, confs)
-    index = ids.index(ID)
-    boxes[index][0]#this gets x
-    boxes[index][1]#this gets y
-     
+def getBetterObj(ID, xBox, yBox, conf, ids, boxes, confs):
+    #print('Getting Better object')
+    #print(ID, xBox, yBox, conf, ids, boxes, confs)
+
+    ret = True
+
+    for ido, boxo, confo in zip(ids, boxes, confs):
+        if ID == ido:
+            x = boxo[0]
+            y = boxo[1]
+            if abs(xBox-x) >= pixToll and abs(yBox-y) >= pixToll:
+                ret = ret and True
+            else:
+                ret = False
+    
+    return ret
+        
+    # create if for if there is at least one thing in the index and if there is at least 2 
 
     #return true if you find abetter box or if the box is not near another box
     # if better box remove the inferior box 
