@@ -4,19 +4,19 @@ from yoloProcess import process
 from networktables import NetworkTables
 import threading
 import json
+import os
 
 app = Flask(__name__)
 cam0 = cv2.VideoCapture(0)
 cam1 = cv2.VideoCapture(1)
 
-# default port for network tables = 1735
-
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
 # init network tables
 NetworkTables.initialize(server='10.10.38.2') #10.10.38.2 use later
 
 # get custom table
 tables = NetworkTables.getTable('Vision')
-driversTable = NetworkTables.getTable('Shuffleboard/Drivers')
+fmsTable = NetworkTables.getTable('FMSInfo')
 
 def run_network():
     while True:
@@ -34,14 +34,27 @@ def run_network():
 
 
 def get_image(camera):
-    ret, img = cam0.read()
     ret, img = cam1.read()
+    ret, img = cam0.read()
+    running = False
+# default port for network tables = 1735
+
     while True:
-        isCube = driversTable.getBoolean('Operator Mode', True)
+        isCube = tables.getBoolean('shouldStream0', True)
+        recording = tables.getBoolean('recording', False)
         if (isCube):
             ret, img = cam0.read()
         else:
             ret, img = cam1.read()
+        if recording:
+            if not running:
+                matchId = fmsTable.getNumber('MatchNumber', 0)
+                rematchId = fmsTable.getNumber('ReplayNumber', 0)
+                out = cv2.VideoWriter(str(matchId) + '-' + str(rematchId) + '.avi', fourcc, 30.0, (img.shape[0], img.shape[1]))
+            out.write(img)
+            running = True
+        elif running and not recording:
+            out.release()
         img = cv2.resize(img, (160, 120))
         _, frame = cv2.imencode('.jpg', img)
         yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
