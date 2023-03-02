@@ -44,19 +44,16 @@ def process(image):
     blob = cv2.dnn.blobFromImage(image, scale, (416, 416), (0, 0, 0), True, crop = False)
     net.setInput(blob)
     
-    #the problem
-    begTime = time.time()
     outs = net.forward(get_output(net))
-    end_Time = time.time()
 
-    totalTime = begTime - end_Time
-
-    #print('the problem took ' + str(totalTime) + ' seconds!')
+    
     class_ids = []
 
     confidences = []
 
     boxes = []
+
+    dataOut = []
     
     for out in outs:
         for detection in out:
@@ -76,13 +73,13 @@ def process(image):
                 class_ids.append(class_id)
                 confidences.append(float(confidence))
                 boxes.append([x, y, w, h])
+                dataOut.append((str(class_id), str(center_x), str(center_y)))
 
 
 
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
     
 
-    beg__time =time.time()
     for i in indices:
 
         box = boxes[i]
@@ -98,8 +95,7 @@ def process(image):
         
         draw_bounding_box(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
 
-    end__time = time.time()
-    #print('this for loop at the very end!!!  was this long: ' + str(end__time-beg__time))
+    
           
-    return image
+    return image, dataOut
 
