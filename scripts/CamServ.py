@@ -50,7 +50,7 @@ def get_image(camera):
             if not running:
                 matchId = fmsTable.getNumber('MatchNumber', 0)
                 rematchId = fmsTable.getNumber('ReplayNumber', 0)
-                out = cv2.VideoWriter(str(matchId) + '-' + str(rematchId) + '.avi', fourcc, 30.0, (img.shape[0], img.shape[1]))
+                out = cv2.VideoWriter(str(matchId) + '-' + str(rematchId) + '.avi', fourcc, 30.0, (img.shape[1], img.shape[0]))
             out.write(img)
             running = True
         elif running and not recording:
