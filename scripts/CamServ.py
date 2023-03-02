@@ -12,7 +12,7 @@ cam1 = cv2.VideoCapture(1)
 # default port for network tables = 1735
 
 # init network tables
-NetworkTables.initialize(server='10.10.39.2') #10.10.38.2 use later
+NetworkTables.initialize(server='10.10.38.2') #10.10.38.2 use later
 
 # get custom table
 tables = NetworkTables.getTable('Vision')
@@ -20,8 +20,8 @@ driversTable = NetworkTables.getTable('Shuffleboard/Drivers')
 
 def run_network():
     while True:
-        on0 = tables.getBoolean('on0', True)
-        on1 = tables.getBoolean('on1', True)
+        on0 = tables.getBoolean('on0', False)
+        on1 = tables.getBoolean('on1', False)
         ret = False
         if on0:
             ret, img = cam0.read()
