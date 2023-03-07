@@ -9,7 +9,7 @@ while(True):
 	ret, frame = cam.read()
 	ret2, frame2 = cam2.read()
 
-	#frame = process(frame)
+	frame = process(frame)
 
 	cv2.imshow('window', frame)
 	cv2.imshow('window2', frame2)

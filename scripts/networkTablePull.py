@@ -1,8 +1,6 @@
 from networktables import NetworkTables
 from time import sleep 
 
-NetworkTables.initialize(server="local ip adress here from the jetson")
-sd = NetworkTables.getTable('SmartDashboard')
 
 while True:
   print("something", sd.getNumber('something', x)
