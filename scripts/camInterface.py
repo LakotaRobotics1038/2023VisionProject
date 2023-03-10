@@ -9,6 +9,7 @@ from networktables import NetworkTables
 import collections
 
 
+
 #BoundingRectangle = collections.namedtuple('BoundingRectangle', 'x y w h')
 
 class Cam():
@@ -18,7 +19,7 @@ class Cam():
     self.stream = requests.get(url, stream=True)
     self.thread_cancelled = False
     self.thread = Thread(target=self.run)
-    print "camera initialised"
+    print ("camera initialised")
 
 
     #self.__resize_image_width = 320.0
@@ -49,9 +50,9 @@ class Cam():
     
   def start(self):
     self.thread.start()
-    print "camera stream started"
+    print ("camera stream started")
     Cam.createNetworkTable()
-    print "Network Table created."
+    print ("Network Table created.")
     
   def run(self):
     bytes=''
@@ -117,11 +118,12 @@ class Cam():
             exit(0)
 
       except ThreadError:
-        print "error"
+        print ("error")
         self.thread_cancelled = True
         
         
   def is_running(self):
+
     return self.thread.isAlive()
       
     
@@ -164,36 +166,36 @@ class Cam():
     return    
 
   #Filter the mask to remove noise
-  @staticmethod
-  def filterMask(inImage):
-    kernelOpen=np.ones((5,5))
-    kernelClose=np.ones((20,20))
-    maskOpen=cv2.morphologyEx(inImage,cv2.MORPH_OPEN,kernelOpen)
-    maskClose=cv2.morphologyEx(maskOpen,cv2.MORPH_CLOSE,kernelClose)
-    return maskClose
+  #@staticmethod
+  #def filterMask(inImage):
+    #kernelOpen=np.ones((5,5))
+    #kernelClose=np.ones((20,20))
+    #maskOpen=cv2.morphologyEx(inImage,cv2.MORPH_OPEN,kernelOpen)
+    #maskClose=cv2.morphologyEx(maskOpen,cv2.MORPH_CLOSE,kernelClose)
+    #return maskClose
 
   #Find the contours in the image, and put a bounding rectangle around them
-  @staticmethod
-  def findBoundingRectangle(inImage):
-    maskFinal = inImage
-    image,contours,_=cv2.findContours(maskFinal.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-    brX = 0
-    brY = 0
-    brW = 0
-    brH = 0
-    maxIndex = 0 # this tells the index of the contours of max area
-    maxArea = -5
-    for i in range(len(contours)):
-      brX,brY,brW,brH=cv2.boundingRect(contours[i])
-      if brW*brH > maxArea :
-        maxArea = brW*brH
-        maxPosition = i
-      if len(contours) > 0:
-        brX,brY,brW,brH=cv2.boundingRect(contours[maxIndex])
-        boundRect = BoundingRectangle(x=brX, y=brY, w=brW, h=brH)
-        return boundRect
-      else:
-        return None
+  #@staticmethod
+  #def findBoundingRectangle(inImage):
+    #maskFinal = inImage
+    #image,contours,_=cv2.findContours(maskFinal.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+    #brX = 0
+    #brY = 0
+    #brW = 0
+    #brH = 0
+    #maxIndex = 0 # this tells the index of the contours of max area
+    #maxArea = -5
+    #for i in range(len(contours)):
+      #brX,brY,brW,brH=cv2.boundingRect(contours[i])
+      #if brW*brH > maxArea :
+        #maxArea = brW*brH
+        #maxPosition = i
+      #if len(contours) > 0:
+        #brX,brY,brW,brH=cv2.boundingRect(contours[maxIndex])
+        #boundRect = BoundingRectangle(x=brX, y=brY, w=brW, h=brH)
+        #return boundRect
+      #else:
+        #return None
 
 
 
@@ -224,20 +226,7 @@ class Cam():
 #BlurType = Enum('BlurType', 'Box_Blur','Gaussian_Blur', 'Median_Filter', 'Bilateral_Filter')
     
 if __name__ == "__main__":
-  url = 'http://localhost:1180/?action=stream'
+  url = 'http://localhost:1181/?action=stream'
   cam = Cam(url)
   cam.start()
-Footer
-© 2023 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
+
