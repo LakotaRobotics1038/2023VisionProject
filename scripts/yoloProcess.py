@@ -3,7 +3,7 @@ import argparse
 import cv2
 import time
 
-conf_threshold = 0.8
+conf_threshold = 0.9
 nms_threshold = 0.8
 
 net = cv2.dnn.readNetFromDarknet('../mk1/yolov4-tiny.cfg', '../mk1/backup/yolov4-tiny_best.weights')
