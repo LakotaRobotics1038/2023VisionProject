@@ -1,3 +1,8 @@
-1:cubes
-2:cones
-3:aprilTags
+1: apt1
+2: apt2
+3: apt3
+4: apt4
+5: apt5
+6: apt6
+7: apt7
+8: apt8

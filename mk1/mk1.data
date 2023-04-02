@@ -1,4 +1,4 @@
-classes = 3
+classes = 8
 train = /home/xarga/repos/2023VisionProject/mk1/train.txt
 valid = /home/xarga/repos/2023VisionProject/mk1/validate.txt
 names = /home/xarga/repos/2023VisionProject/mk1/labels.txt
