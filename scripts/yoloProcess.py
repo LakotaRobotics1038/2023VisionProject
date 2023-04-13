@@ -3,10 +3,12 @@ import argparse
 import cv2
 import time
 
-conf_threshold = 0.8
+conf_threshold = 0.9
 nms_threshold = 0.8
+inf_thresh = 50
+pixToll = 25 
 
-net = cv2.dnn.readNetFromDarknet('../mk1/yolov4-tiny.cfg', '../mk1/backup/yolov4-tiny_best.weights')
+net = cv2.dnn.readNetFromDarknet('../mk1/yoloCon-tiny-mk1.cfg', '../mk1/backup/yoloCon-tiny-mk1_last.weights')
 scale = 1.0 / 255.0
 classes = None
 
@@ -36,7 +38,28 @@ def draw_bounding_box (img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
     cv2.putText(img, label + f" {confidence}", (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
+def getBetterObj(ID, xBox, yBox, conf, ids, boxes, confs):
+    #print('Getting Better object')
+    #print(ID, xBox, yBox, conf, ids, boxes, confs)
+
+    ret = True
+
+    for ido, boxo, confo in zip(ids, boxes, confs):
+        if ID == ido:
+            x = boxo[0]
+            y = boxo[1]
+            if abs(xBox-x) >= pixToll and abs(yBox-y) >= pixToll:
+                ret = ret and True
+            else:
+                ret = False
     
+    return ret
+        
+    # create if for if there is at least one thing in the index and if there is at least 2 
+
+    #return true if you find abetter box or if the box is not near another box
+    # if better box remove the inferior box 
+
 def process(image):
     
     Width = image.shape[1]
@@ -44,19 +67,16 @@ def process(image):
     blob = cv2.dnn.blobFromImage(image, scale, (416, 416), (0, 0, 0), True, crop = False)
     net.setInput(blob)
     
-    #the problem
-    begTime = time.time()
     outs = net.forward(get_output(net))
-    end_Time = time.time()
 
-    totalTime = begTime - end_Time
-
-    #print('the problem took ' + str(totalTime) + ' seconds!')
+    
     class_ids = []
 
     confidences = []
 
     boxes = []
+
+    dataOut = []
     
     for out in outs:
         for detection in out:
@@ -73,16 +93,24 @@ def process(image):
                 h = int(detection[3] * Height)
                 x = center_x - w/2
                 y = center_y - h/2
-                class_ids.append(class_id)
-                confidences.append(float(confidence))
-                boxes.append([x, y, w, h])
+                if len(boxes) == 0 or class_id not in class_ids or getBetterObj(class_id, x, y, confidence, class_ids, boxes, confidences):
+                    
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([x, y, w, h])
+                    dataOut.append({
+                        'id': str(class_id),
+                        'x': str(center_x),
+                        'y': str(center_y),
+                        'conf': str(confidence)
+                        'area' : str(w * h)
+                    })
 
 
 
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
     
 
-    beg__time =time.time()
     for i in indices:
 
         box = boxes[i]
@@ -98,8 +126,7 @@ def process(image):
         
         draw_bounding_box(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
 
-    end__time = time.time()
-    #print('this for loop at the very end!!!  was this long: ' + str(end__time-beg__time))
+    
           
-    return image
+    return image, dataOut
 
