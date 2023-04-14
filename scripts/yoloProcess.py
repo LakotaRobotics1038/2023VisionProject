@@ -102,7 +102,7 @@ def process(image):
                         'id': str(class_id),
                         'x': str(center_x),
                         'y': str(center_y),
-                        'conf': str(confidence)
+                        'conf': str(confidence),
                         'area' : str(w * h)
                     })
 

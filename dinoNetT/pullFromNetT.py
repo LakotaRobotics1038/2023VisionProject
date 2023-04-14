@@ -4,11 +4,11 @@ from time import sleep
 
 
 NetworkTables.initialize(server='172.16.185.112')
-sd = NetworkTables.getTable('SmartDashboard')
+sd = NetworkTables.getTable('Vision')
 
 
 while True:
-    print ("penut", sd.getNumber('penut', 45))
+    print ('values', sd.getString('values', 'defualt'))
     sleep(1)
     
 

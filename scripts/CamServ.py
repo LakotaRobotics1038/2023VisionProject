@@ -16,6 +16,7 @@ NetworkTables.initialize(server='10.10.39.2') #10.10.38.2 use later
 
 # get custom table
 tables = NetworkTables.getTable('Vision')
+driversTable = NetworkTables.getTable('Shuffleboard/Drivers')
 
 def run_network():
     while True:
@@ -33,20 +34,21 @@ def run_network():
 
 
 def get_image(camera):
+    ret, img = cam0.read()
+    ret, img = cam1.read()
     while True:
-        ret, img = camera.read()
+        isCube = driversTable.getBoolean('Operator Mode', True)
+        if (isCube):
+            ret, img = cam0.read()
+        else:
+            ret, img = cam1.read()
         img = cv2.resize(img, (160, 120))
         _, frame = cv2.imencode('.jpg', img)
         yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
 
-@app.route('/stream-0')
+@app.route('/stream')
 def stream0():
     return Response(get_image(cam0), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-@app.route('/stream-1')
-def stream1():
-    return Response(get_image(cam1), mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 t = threading.Thread(target=run_network)
 t.start()
