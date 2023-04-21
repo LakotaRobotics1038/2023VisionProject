@@ -2,17 +2,18 @@ from flask import Flask, Response
 import cv2
 from yoloProcess import process
 from networktables import NetworkTables
+from datetime import datetime
 import threading
 import json
-import os
 
 app = Flask(__name__)
 cam0 = cv2.VideoCapture(0)
 cam1 = cv2.VideoCapture(1)
+serverAddr = '10.10.38.2'
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 # init network tables
-NetworkTables.initialize(server='10.10.38.2') #10.10.38.2 use later
+NetworkTables.initialize(server=serverAddr) #10.10.38.2 use later
 
 # get custom table
 tables = NetworkTables.getTable('Vision')
@@ -33,38 +34,52 @@ def run_network():
             tables.putString('values', json.dumps(vals))
 
 
-def get_image(camera):
+def get_image():
     ret, img = cam1.read()
     ret, img = cam0.read()
-    running = False
 # default port for network tables = 1735
 
     while True:
-        isCube = tables.getBoolean('shouldStream0', True)
-        recording = tables.getBoolean('recording', False)
-        if (isCube):
+        shouldStream0 = tables.getBoolean('shouldStream0', True)
+
+        if (shouldStream0):
             ret, img = cam0.read()
         else:
             ret, img = cam1.read()
-        if recording:
-            if not running:
-                matchId = fmsTable.getNumber('MatchNumber', 0)
-                rematchId = fmsTable.getNumber('ReplayNumber', 0)
-                out = cv2.VideoWriter(str(matchId) + '-' + str(rematchId) + '.avi', fourcc, 30.0, (img.shape[1], img.shape[0]))
-            out.write(img)
-            running = True
-        elif running and not recording:
-            out.release()
         img = cv2.resize(img, (160, 120))
         _, frame = cv2.imencode('.jpg', img)
         yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
 
+def record_cam():
+    isRecording = False
+
+    while True:
+        ct = datetime.now()
+        shouldRecord = tables.getBoolean('recording', False)
+        if shouldRecord:
+              ret0, img0 = cam0.read()
+              ret1, img1 = cam1.read()
+              if not isRecording:
+                  # matchId = fmsTable.getNumber('MatchNumber', 0)
+                  # rematchId = fmsTable.getNumber('ReplayNumber', 0)
+                  # out = cv2.VideoWriter(str(matchId) + '-' + str(rematchId) + '.avi', fourcc, 60.0, (img.shape[1], img.shape[0]))
+                  out0 = cv2.VideoWriter(str(ct) + '-cam0.avi', fourcc, 15.0, (img0.shape[1], img0.shape[0]))
+                  out1 = cv2.VideoWriter(str(ct) + '-cam1.avi', fourcc, 15.0, (img1.shape[1], img1.shape[0]))
+              out0.write(img0)
+              out1.write(img1)
+              isRecording = True
+        elif isRecording and not shouldRecord:
+            out0.release()
+            out1.release()
+
 @app.route('/stream')
 def stream0():
-    return Response(get_image(cam0), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(get_image(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-t = threading.Thread(target=run_network)
-t.start()
+recordingThread = threading.Thread(target=record_cam)
+visionThread = threading.Thread(target=run_network)
+visionThread.start()
+recordingThread.start()
 app.run(host='0.0.0.0', port = 1180, threaded=True)
 
 
