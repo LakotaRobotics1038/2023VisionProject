@@ -65,9 +65,9 @@ def record_cam():
                   # rematchId = fmsTable.getNumber('ReplayNumber', 0)
                   # out = cv2.VideoWriter(str(matchId) + '-' + str(rematchId) + '.avi', fourcc, 60.0, (img.shape[1], img.shape[0]))
                   if ret0:
-                      out0 = cv2.VideoWriter(f'{os.path.expanduser('~')}/Videos/{ct.strftime('%Y-%m-%d at %H-%M-%S')} cam0.avi', fourcc, 15.0, (img0.shape[1], img0.shape[0]))
+                      out0 = cv2.VideoWriter(f"{os.path.expanduser('~')}/Videos/{ct.strftime('%Y-%m-%d at %H-%M-%S')} cam0.avi", fourcc, 15.0, (img0.shape[1], img0.shape[0]))
                   if ret1:
-                      out1 = cv2.VideoWriter(f'{os.path.expanduser('~')}/Videos/{ct.strftime('%Y-%m-%d at %H-%M-%S')} cam1.avi', fourcc, 15.0, (img1.shape[1], img1.shape[0]))
+                      out1 = cv2.VideoWriter(f"{os.path.expanduser('~')}/Videos/{ct.strftime('%Y-%m-%d at %H-%M-%S')} cam1.avi", fourcc, 15.0, (img1.shape[1], img1.shape[0]))
               if ret0:
                   out0.write(img0)
               if ret1:
