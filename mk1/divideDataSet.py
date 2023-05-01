@@ -1,8 +1,8 @@
 import os
 import random
 
-pathToRepo = r'/home/xarga/repos/2023VisionProject'
-folderName = 'labeledData/'
+pathToRepo = r'C:\Users\zoehe\Documents\2023VisionProject'
+folderName = 'WorldsData/'
 extension = ".jpg"
 trainingLoc = pathToRepo + r'/mk1/train.txt'
 validationLoc = pathToRepo + r'/mk1/validate.txt'
