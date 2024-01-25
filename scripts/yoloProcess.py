@@ -64,7 +64,7 @@ def process(image):
     
     Width = image.shape[1]
     Height = image.shape[0]
-    blob = cv2.dnn.blobFromImage(image, scale, (128, 128), (0, 0, 0), True, crop = False)
+    blob = cv2.dnn.blobFromImage(image, scale, (416, 416), (0, 0, 0), True, crop = False)
     net.setInput(blob)
     
     outs = net.forward(get_output(net))
